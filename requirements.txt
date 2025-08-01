@@ -1,0 +1,5 @@
+Flask>=2.3.0
+pandas>=2.1.0
+numpy>=1.25.0
+numpy-financial>=1.0.0
+Werkzeug>=2.3.0

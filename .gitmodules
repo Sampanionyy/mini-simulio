@@ -1,0 +1,6 @@
+[submodule "mini-simulio-api"]
+	path = mini-simulio-api
+	url = https://github.com/Sampanionyy/mini-simulio-api.git
+[submodule "mini-simulio-web"]
+	path = mini-simulio-web
+	url = https://github.com/Sampanionyy/mini-simulio-web.git

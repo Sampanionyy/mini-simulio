@@ -1,157 +1,153 @@
-# Mini Simulio - Test Technique
+Mini Simulio – Test Technique
+📖 Description
+Mini Simulio est une application de simulation simplifiée permettant à des utilisateurs authentifiés d’effectuer des simulations et de gérer des clients.
 
-## 📖 Description
-Application de simulation simplifiée permettant à des utilisateurs authentifiés d'effectuer des simulations et de gérer des clients.
+🛠️ Technologies utilisées
+Backend
+Laravel (PHP)
 
-## Technologies utilisées
+MySQL
 
-### Backend
-- **Laravel** (PHP)
-- **MySQL** 
-- **API REST**
+API REST
 
-### Frontend  
-- **React.js**
-- **Responsive Design** (Desktop, Tablette, Mobile)
+Frontend
+React.js
 
-### Simulateur
-- **Flask** (Python)
-- **API REST** pour l'intégration
+Responsive Design (support Desktop, Tablette, Mobile)
 
-## Architecture du projet avec submodules
+Simulateur
+Flask (Python)
 
-Le projet utilise des **submodules Git** pour organiser les différentes parties de l'application :
+API REST pour l’intégration
 
+🏗️ Architecture & Arborescence des submodules
+Le projet est organisé autour de submodules Git pour séparer les différentes parties applicatives :
+
+text
 mini-simulio/
 ├── README.md
 ├── dump.sql
-├── mini-simulio-api/ # Submodule: API Laravel
-├── mini-simulio-web/ # Submodule: Application React
-├── app.py # Simulateur Flask
-└── requirements.txt # Dépendances Python
+├── mini-simulio-api/     # Submodule : API Laravel
+├── mini-simulio-web/     # Submodule : Application React
+├── app.py                # Simulateur Flask
+└── requirements.txt      # Dépendances Python
+mini-simulio-api : Repository séparé pour l’API Laravel (backend)
 
-yaml
-Copier
-Modifier
+mini-simulio-web : Repository séparé pour le frontend React
 
-### Structure des submodules
-- **mini-simulio-api** : Repository séparé contenant l'API Laravel
-- **mini-simulio-web** : Repository séparé contenant l'application React frontend
+🚀 Installation & Lancement
+Prérequis
+PHP >= 8.1
 
----
+Composer
 
-## Installation et lancement
+Node.js >= 16
 
-### Prérequis
-- PHP >= 8.1
-- Composer
-- Node.js >= 16
-- Python >= 3.8
-- MySQL
-- Git
+Python >= 3.8
 
-### 0. Clonage avec submodules
+MySQL
 
-```bash
-# Cloner le projet principal avec tous les submodules
+Git
+
+1. Clonage du projet avec submodules
+bash
+# Clonez le projet principal avec tous les submodules
 git clone --recursive https://github.com/Sampanionyy/mini-simulio.git
 
-```
-# OU si déjà cloné sans --recursive
-git clone https://github.com/Sampanionyy/mini-simulio.git
-cd mini-simulio
+# Si déjà cloné sans --recursive
 git submodule init
 git submodule update
-
-1. Base de données
-# Créer la base de données
+2. Mise en place de la base de données
+bash
 mysql -u root -p
 CREATE DATABASE mini_simulio;
 exit
 
-# Importer le dump de données
 mysql -u root -p mini_simulio < dump.sql
-2. Installer toutes les dépendances
-Avant de lancer l'application, il est important d’installer toutes les dépendances pour chaque composant :
-
+3. Installation des dépendances
 Backend (Laravel)
+bash
 cd mini-simulio-api
 composer install
-
 cp .env.example .env
-# Modifier le fichier .env pour configurer la connexion MySQL :
-# DB_DATABASE=mini_simulio
-# DB_USERNAME=your_username
-# DB_PASSWORD=your_password
+# Modifiez le fichier .env (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
 php artisan key:generate
-
 Frontend (React)
+bash
 cd ../mini-simulio-web
 npm install
-
 Simulateur (Flask)
+bash
 cd ..
 pip install -r requirements.txt
-
-3. Lancement du projet complet
-Une fois toutes les dépendances installées dans chaque sous-dossier, vous pouvez lancer tous les services simultanément avec la commande suivante à la racine du projet :
-
+4. Lancement des services
+Démarrage automatique (requiert node)
+bash
 node start-all.js
+Ce script lance :
 
-Ce script va démarrer automatiquement :
+Backend Laravel : http://localhost:8000
 
-* Le backend Laravel sur http://localhost:8000
-* Le frontend React sur http://localhost:3000
-* Le simulateur Flask sur http://localhost:5000
+Frontend React : http://localhost:3000
 
-4. Lancement manuel (optionnel)
-Si vous souhaitez démarrer manuellement chaque service séparément, voici les commandes à lancer dans chaque dossier :
+Simulateur Flask : http://localhost:5000
 
-Backend (Laravel)
+Démarrage manuel (optionnel)
+Backend :
+
+bash
 cd mini-simulio-api
 php artisan serve
+Frontend :
 
-Frontend (React)
+bash
 cd mini-simulio-web
 npm start
+Simulateur :
 
-Simulateur (Flask)
+bash
 cd ..
 python app.py
+🔄 Gestion des submodules Git
+Mettre à jour tous les submodules :
 
-Gestion des submodules
-Mettre à jour tous les submodules
+bash
 git submodule update --remote
+Mettre à jour un submodule spécifique :
 
-Mettre à jour un submodule spécifique
+bash
 git submodule update --remote mini-simulio-api
 git submodule update --remote mini-simulio-web
+Travailler sur un submodule :
 
-Travailler sur un submodule
+bash
 cd mini-simulio-api
-
-# Modifier le code
+# Modifiez le code puis :
 git add .
 git commit -m "Modification API"
 git push origin main
 
-# Retour au projet principal et mise à jour de la référence
+# Depuis la racine principale
 cd ..
 git add mini-simulio-api
 git commit -m "Update API submodule"
 git push origin main
+🎯 Fonctionnalités principales
+Authentification utilisateur (login/logout)
 
-Fonctionnalités implémentées
-- Authentification utilisateur avec login/logout
-- Interface de simulation pour utilisateurs authentifiés
-- API REST sécurisée
-- Gestion complète des clients (CRUD)
-- Attribution des simulations aux clients
-- Interface responsive (Mobile, Tablette, Desktop)
+Interface de simulation pour utilisateurs authentifiés
 
-Contact
+API REST sécurisée
+
+Gestion complète des clients (CRUD)
+
+Attribution et suivi des simulations clients
+
+Interface responsive (mobile, tablette, desktop)
+
+📬 Contact
 Pour toute question technique, contactez :
 sampanionyra55@gmail.com
 
-Développé dans le cadre du test technique Simulio
-Architecture modulaire avec submodules Git pour une meilleure organisation
+Développé dans le cadre du test technique Simulio.
+Architecture modulaire avec submodules Git pour une organisation claire et évolutive.

@@ -57,10 +57,10 @@ mini-simulio/
 
 ```bash
 # Cloner le projet principal avec tous les submodules
-git clone --recursive https://github.com/votre-username/mini-simulio.git
+git clone --recursive https://github.com/Sampanionyy/mini-simulio.git
 
 # OU si déjà cloné sans --recursive
-git clone https://github.com/votre-username/mini-simulio.git
+git clone https://github.com/Sampanionyy/mini-simulio.git
 cd mini-simulio
 git submodule init
 git submodule update

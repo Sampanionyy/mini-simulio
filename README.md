@@ -60,12 +60,23 @@ git submodule update
 
 ### 2. Mise en place de la base de données
 
+#### Linux/macOS :
 ```bash
 mysql -u root -p
 CREATE DATABASE mini_simulio;
 exit
 mysql -u root -p mini_simulio < dump.sql
 ```
+
+#### Windows :
+```cmd
+mysql -u root -p
+CREATE DATABASE mini_simulio;
+exit
+mysql -u root -p mini_simulio < dump.sql
+```
+
+**Note :** Sous Windows, assurez-vous que MySQL est dans votre PATH ou utilisez le chemin complet vers l'exécutable MySQL.
 
 ### 3. Installation des dépendances
 
@@ -163,7 +174,7 @@ git push origin main
 - Interface de simulation pour utilisateurs authentifiés
 - API REST sécurisée
 - Gestion complète des clients (CRUD)
-- Attribution et suivi des simulations clients
+- Attribution et suivi des simulations clients avec téléchargement PDF
 - Interface responsive (mobile, tablette, desktop)
 
 ## Contact

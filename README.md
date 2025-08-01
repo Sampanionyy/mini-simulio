@@ -1,51 +1,45 @@
-# Mini Simulio - Test Technique
+# Mini Simulio – Test Technique
 
-## 📖 Description
-Application de simulation simplifiée permettant à des utilisateurs authentifiés d'effectuer des simulations et de gérer des clients.
+## Description
+
+Mini Simulio est une application de simulation simplifiée permettant à des utilisateurs authentifiés d'effectuer des simulations et de gérer des clients.
 
 ## Technologies utilisées
 
 ### Backend
-- **Laravel** (PHP)
-- **MySQL** 
-- **API REST**
+- Laravel (PHP)
+- MySQL
+- API REST
 
-### Frontend  
-- **React.js**
-- **Responsive Design** (Desktop, Tablette, Mobile)
+### Frontend
+- React.js
+- Responsive Design (support Desktop, Tablette, Mobile)
 
 ### Simulateur
-- **Flask** (Python)
-- **API REST** pour l'intégration
+- Flask (Python)
+- API REST pour l'intégration
 
-## Architecture du projet avec submodules
+## Architecture & Arborescence des submodules
 
-Le projet utilise des **submodules Git** pour organiser les différentes parties de l'application :
+Le projet est organisé autour de submodules Git pour séparer les différentes parties applicatives :
 
 ```
 mini-simulio/
 ├── README.md
 ├── dump.sql
-├── mini-simulio-api/              # Submodule: API Laravel
-│   ├── app/
-│   ├── config/
-│   ├── database/
-│   └── ...
-├── mini-simulio-web/             # Submodule: Application React
-│   ├── src/
-│   ├── public/
-│   └── ...
-├── app.py                        # Simulateur Flask
-└── requirements.txt              # Dépendances Python
+├── mini-simulio-api/     # Submodule : API Laravel
+├── mini-simulio-web/     # Submodule : Application React
+├── app.py                # Simulateur Flask
+└── requirements.txt      # Dépendances Python
 ```
 
-### Structure des submodules
-- **mini-simulio-api** : Repository séparé contenant l'API Laravel
-- **mini-simulio-web** : Repository séparé contenant l'application React frontend
+- **mini-simulio-api** : Repository séparé pour l'API Laravel (backend)
+- **mini-simulio-web** : Repository séparé pour le frontend React
 
-## Installation et lancement
+## Installation & Lancement
 
 ### Prérequis
+
 - PHP >= 8.1
 - Composer
 - Node.js >= 16
@@ -53,171 +47,141 @@ mini-simulio/
 - MySQL
 - Git
 
-### 0. Clonage avec submodules
+### 1. Clonage du projet avec submodules
 
 ```bash
-# Cloner le projet principal avec tous les submodules
+# Clonez le projet principal avec tous les submodules
 git clone --recursive https://github.com/Sampanionyy/mini-simulio.git
 
-# OU si déjà cloné sans --recursive
-git clone https://github.com/Sampanionyy/mini-simulio.git
-cd mini-simulio
+# Si déjà cloné sans --recursive
 git submodule init
 git submodule update
 ```
 
-### 1. Base de données
+### 2. Mise en place de la base de données
+
+#### Linux/macOS :
 ```bash
-# Créer la base de données
 mysql -u root -p
 CREATE DATABASE mini_simulio;
 exit
-
-# Importer le dump
 mysql -u root -p mini_simulio < dump.sql
 ```
 
-### 2. Backend (Laravel) - Submodule mini-simulio-api
+#### Windows :
+```cmd
+mysql -u root -p
+CREATE DATABASE mini_simulio;
+exit
+mysql -u root -p mini_simulio < dump.sql
+```
+
+**Note :** Sous Windows, assurez-vous que MySQL est dans votre PATH ou utilisez le chemin complet vers l'exécutable MySQL.
+
+### 3. Installation des dépendances
+
+#### Backend (Laravel)
+
 ```bash
 cd mini-simulio-api
 composer install
 cp .env.example .env
-# Configurer .env avec vos paramètres MySQL
-# DB_DATABASE=mini_simulio
-# DB_USERNAME=your_username  
-# DB_PASSWORD=your_password
+# Modifiez le fichier .env (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
 php artisan key:generate
+```
+
+#### Frontend (React)
+
+```bash
+cd ../mini-simulio-web
+npm install
+```
+
+#### Simulateur (Flask)
+
+```bash
+cd ..
+pip install -r requirements.txt
+```
+
+### 4. Lancement des services
+
+#### Démarrage automatique (requiert node)
+
+```bash
+node start-all.js
+```
+
+Ce script lance :
+- Backend Laravel : http://localhost:8000
+- Frontend React : http://localhost:3000
+- Simulateur Flask : http://localhost:5000
+
+#### Démarrage manuel (optionnel)
+
+**Backend :**
+```bash
+cd mini-simulio-api
 php artisan serve
 ```
-Backend accessible sur `http://localhost:8000`
 
-### 3. Frontend (React) - Submodule mini-simulio-web
+**Frontend :**
 ```bash
 cd mini-simulio-web
-npm install
 npm start
 ```
-Frontend accessible sur `http://localhost:3000`
 
-### 4. Simulateur (Flask)
+**Simulateur :**
 ```bash
-# À la racine du projet
-pip install flask flask-cors
+cd ..
 python app.py
 ```
-Simulateur accessible sur `http://localhost:5000`
 
-## Gestion des submodules
+## Gestion des submodules Git
 
-### Mettre à jour les submodules
+### Mettre à jour tous les submodules :
+
 ```bash
-# Mettre à jour tous les submodules vers leur dernière version
 git submodule update --remote
+```
 
-# Mettre à jour un submodule spécifique
+### Mettre à jour un submodule spécifique :
+
+```bash
 git submodule update --remote mini-simulio-api
 git submodule update --remote mini-simulio-web
 ```
 
-### Travailler sur un submodule
-```bash
-# Entrer dans le submodule
-cd mini-simulio-api
+### Travailler sur un submodule :
 
-# Faire des modifications et commit
+```bash
+cd mini-simulio-api
+# Modifiez le code puis :
 git add .
 git commit -m "Modification API"
 git push origin main
 
-# Retourner au projet principal et mettre à jour la référence
+# Depuis la racine principale
 cd ..
 git add mini-simulio-api
 git commit -m "Update API submodule"
 git push origin main
 ```
 
-## Fonctionnalités implémentées
+## Fonctionnalités principales
 
-### Fonctionnalités principales
-- [x] Authentification utilisateur
-- [x] Système de connexion/déconnexion
-- [x] Interface de simulation générale pour utilisateurs authentifiés
-- [x] API REST sécurisée
-
-### Bonus implémentés
-- [x] Gestion des clients (CRUD)
-- [x] Attribution de simulations aux clients
-- [x] Interface responsive (Desktop/Tablette/Mobile)
-
-## Responsive Design
-L'application est entièrement responsive et s'adapte aux différentes tailles d'écran :
-- Mobile (< 768px)
-- Tablette (768px - 1024px)  
-- Desktop (> 1024px)
-
-## API Endpoints
-
-### Authentification
-- `POST /api/login` - Connexion
-- `POST /api/logout` - Déconnexion
-- `GET /api/me` - Utilisateur connecté
-
-### Clients
-- `GET /api/clients` - Liste des clients
-- `POST /api/clients` - Créer un client
-- `PUT /api/clients/{id}` - Modifier un client
-- `DELETE /api/clients/{id}` - Supprimer un client
-
-### Simulations
-- `POST /api/simulations` - Créer une simulation
-- `GET /api/simulations/client/{clientId}` - Liste des simulations d'un client
-
-## Avantages des submodules
-
-### Organisation
-- **Séparation claire** entre frontend et backend
-- **Repositories indépendants** pour chaque composant
-- **Gestion des versions** séparée pour API et Web
-
-### Développement
-- **Équipes séparées** peuvent travailler sur API et Web
-- **Déploiement indépendant** possible
-- **Réutilisation** des composants dans d'autres projets
-
-### Maintenance
-- **Historique distinct** pour chaque partie
-- **Tests et CI/CD** séparés
-- **Gestion des dépendances** isolée
-
-## Problèmes connus
-Aucun problème majeur identifié. Si vous rencontrez des difficultés :
-
-1. Vérifiez que tous les services sont démarrés
-2. Vérifiez les ports (8000, 3000, 5000)
-3. Vérifiez la configuration de la base de données
-4. **Pour les submodules** : Assurez-vous d'avoir cloné avec `--recursive` ou fait `git submodule update --init`
-
-## Design
-Interface moderne et intuitive avec :
-- Design responsive
-- UX optimisée  
-- Navigation claire
-- Feedback utilisateur
-
-## Structure des repositories
-
-```
-mini-simulio (Repository principal)
-├── mini-simulio-api (Submodule → Repository séparé)
-├── mini-simulio-web (Submodule → Repository séparé)
-└── Simulateur Flask (Code local)
-```
+- Authentification utilisateur (login/logout)
+- Interface de simulation pour utilisateurs authentifiés
+- API REST sécurisée
+- Gestion complète des clients (CRUD)
+- Attribution et suivi des simulations clients avec téléchargement PDF
+- Interface responsive (mobile, tablette, desktop)
 
 ## Contact
-Pour toute question technique concernant ce projet :
-**sampanionyra55@gmail.com**
+
+Pour toute question technique, contactez : sampanionyra55@gmail.com
 
 ---
 
-*Développé dans le cadre du test technique Simulio*  
-*Architecture modulaire avec submodules Git pour une meilleure organisation*
+Développé dans le cadre du test technique Simulio.
+Architecture modulaire avec submodules Git pour une organisation claire et évolutive.

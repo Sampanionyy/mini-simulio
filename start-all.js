@@ -1,10 +1,16 @@
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
+
+const isWindows = os.platform() === "win32";
 
 function runCommand(command, args, cwd, label) {
     return new Promise((resolve, reject) => {
-        const proc = spawn(command, args, { cwd, shell: true });
+        const proc = spawn(command, args, {
+            cwd,
+            shell: true,
+        });
 
         proc.stdout.on("data", (data) => {
             process.stdout.write(`[${label}] ${data}`);
@@ -30,7 +36,10 @@ function runCommand(command, args, cwd, label) {
 }
 
 function runCommandAsync(command, args, cwd, label) {
-    const proc = spawn(command, args, { cwd, shell: true });
+    const proc = spawn(command, args, {
+        cwd,
+        shell: true,
+    });
 
     proc.stdout.on("data", (data) => {
         process.stdout.write(`[${label}] ${data}`);
@@ -56,14 +65,23 @@ function runCommandAsync(command, args, cwd, label) {
 async function setupPythonEnvironment() {
     const venvPath = path.join(__dirname, "venv");
     const requirementsFile = path.join(__dirname, "requirements.txt");
-    const pipPath = path.join(__dirname, "venv", "bin", "pip");
-    const pythonPath = path.join(__dirname, "venv", "bin", "python");
 
-    // Vérifier si l'environnement virtuel existe
-    if (!fs.existsSync(path.join(venvPath, "bin", "activate"))) {
+    const pipPath = isWindows
+        ? path.join(venvPath, "Scripts", "pip.exe")
+        : path.join(venvPath, "bin", "pip");
+
+    const pythonPath = isWindows
+        ? path.join(venvPath, "Scripts", "python.exe")
+        : path.join(venvPath, "bin", "python");
+
+    const activatePath = isWindows
+        ? path.join(venvPath, "Scripts", "activate.bat")
+        : path.join(venvPath, "bin", "activate");
+
+    if (!fs.existsSync(activatePath)) {
         console.log("Création de l'environnement virtuel Python...");
         try {
-            await runCommand("python3", ["-m", "venv", "venv"], __dirname, "VENV_SETUP");
+            await runCommand("python", ["-m", "venv", "venv"], __dirname, "VENV_SETUP");
             console.log("Environnement virtuel créé avec succès");
         } catch (error) {
             console.error("Erreur lors de la création de l'environnement virtuel:", error.message);
@@ -73,13 +91,11 @@ async function setupPythonEnvironment() {
         console.log("✅ Environnement virtuel Python déjà présent.");
     }
 
-    // Vérifier que pip existe maintenant
     if (!fs.existsSync(pipPath)) {
         console.error("pip non trouvé dans l'environnement virtuel");
         return null;
     }
 
-    // Installation des dépendances Python
     if (fs.existsSync(requirementsFile)) {
         console.log("Installation des dépendances Python...");
         try {
@@ -99,7 +115,6 @@ async function setupPythonEnvironment() {
 async function main() {
     console.log("Lancement des services...");
 
-    // Vérifier que les dossiers existent
     const apiPath = path.join(__dirname, "mini-simulio-api");
     const webPath = path.join(__dirname, "mini-simulio-web");
 
@@ -113,25 +128,19 @@ async function main() {
         return;
     }
 
-    // Démarrage de l'API Laravel (asynchrone)
     console.log("Démarrage de l'API Laravel...");
     runCommandAsync("php", ["artisan", "serve"], apiPath, "API");
 
-    // Attendre un peu pour que l'API démarre
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Démarrage du frontend React (asynchrone)
     console.log("Démarrage du frontend React...");
     runCommandAsync("npm", ["run", "dev"], webPath, "WEB");
 
-    // Attendre un peu pour que le frontend démarre
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Configuration de l'environnement Python (synchrone)
     const pythonPath = await setupPythonEnvironment();
 
     if (pythonPath && fs.existsSync(pythonPath)) {
-        // Vérifier que app.py existe
         const appPyPath = path.join(__dirname, "app.py");
         if (fs.existsSync(appPyPath)) {
             console.log("Lancement du simulateur Flask...");
@@ -150,7 +159,6 @@ async function main() {
     console.log("   • Flask (si configuré): http://127.0.0.1:5000");
 }
 
-// Gestion de l'arrêt propre
 process.on('SIGINT', () => {
     console.log('Arrêt des services...');
     process.exit(0);

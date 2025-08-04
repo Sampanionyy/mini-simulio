@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  laravel:
+    build:
+      context: ./mini-simulio-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - ./mini-simulio-api:/var/www/html
+    depends_on:
+      - db
+    command: >
+      bash -c "
+        composer install &&
+        php artisan key:generate &&
+        php artisan migrate --force &&
+        chown -R www-data:www-data storage bootstrap/cache &&
+        chmod -R ug+rwx storage bootstrap/cache &&
+        apache2-foreground
+      "
+
+  react:
+    build:
+      context: ./mini-simulio-web
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./mini-simulio-web:/app
+    stdin_open: true
+    tty: true
+
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    command: [ "python3", "app.py" ]
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: simulio
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
